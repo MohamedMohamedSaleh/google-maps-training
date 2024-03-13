@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -21,6 +22,8 @@ class _MyGoogleMapState extends State<MyGoogleMap> {
     super.initState();
     _determinePosition();
   }
+
+  String? details;
 
   // this controller to controll on map
   final _controller = Completer<GoogleMapController>();
@@ -42,6 +45,14 @@ class _MyGoogleMapState extends State<MyGoogleMap> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            if (details != null)
+              Text(
+                '$details',
+                style: const TextStyle(fontSize: 20),
+              ),
+            const SizedBox(
+              height: 20,
+            ),
             SizedBox(
               height: 400,
               child: GoogleMap(
@@ -101,15 +112,13 @@ class _MyGoogleMapState extends State<MyGoogleMap> {
         position: location,
       ),
     );
-    setState(() {
-      
-    });
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(location.latitude, location.longitude);
+    var element = placemarks.first;
+    details = "${element.country}/ ${element.name}/ ${element.street}";
+    setState(() {});
   }
 
-  /// Determine the current position of the device.
-  ///
-  /// When the location services are not enabled or permissions
-  /// are denied the `Future` will return an error.
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
