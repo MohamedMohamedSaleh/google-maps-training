@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_test/google_map_tharwat.dart';
 import 'package:google_maps_test/search/bloc/search_bloc.dart';
+import 'package:google_maps_test/services/bloc/get_address_bloc.dart';
 
 
 void main() {
@@ -20,14 +21,21 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) => SearchBloc(),
         ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Goolge Map',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+      create: (BuildContext context) => GetAddressBloc(),)
+
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Goolge Map',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          home: const GoogleMapTharwat(),
         ),
-        home: const GoogleMapTharwat(),
       ),
     );
   }
